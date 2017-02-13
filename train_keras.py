@@ -15,11 +15,11 @@ from actions import flip_actions
 
 # TODO: if model is provided get frame size from it
 # TODO: add callbacks to model.fit: 2) testing environment ???
-# TODO: dirs with data to command line arguments??
 # TODO: ranking loss
 
 parser = argparse.ArgumentParser(description="Run commands",
                                  formatter_class=argparse.ArgumentDefaultsHelpFormatter)
+parser.add_argument('dirs', type=str, nargs='+', help='Direcories with uct data.')
 parser.add_argument('--in_model', type=str, default=None,
                     help="Saved model filename. If not provided  new model is created")
 parser.add_argument('--out_model', type=str,
@@ -57,47 +57,6 @@ args = parser.parse_args()
 
 
 def run_training():
-    '''    
-    dirs = [
-        '/media/storage2/uct_data/skiing_20170115-061728',
-        '/media/storage2/uct_data/skiing1',
-        '/media/storage2/uct_data/skiing2',
-        '/media/storage2/uct_data/skiing_20170118-054226',
-        '/media/storage2/uct_data/skiing_20170117-201459',
-        '/media/storage2/uct_data/skiing_20170120-232547',
-        '/media/storage2/uct_data/skiing_20170121-222543',
-    ]
-    '''
-   
-    '''
-    dirs = [
-        '/media/storage2/uct_data/pacman_dummy',
-        '/media/storage2/uct_data/pacman_hack2',
-        '/media/storage2/uct_data/pacman_dtm_hack.tar.gz',
-        '/media/storage2/uct_data/pacman_sasha.tar.gz',
-        '/media/storage2/uct_data/pacman_dtm_hack2.tar.gz',
-        '/media/storage2/uct_data/pacman_sasha2.tar.gz',
-        '/media/storage2/uct_data/pacman_hack',
-        '/media/storage2/uct_data/pacman_sasha3.tar.gz',
-    ]
-    '''
-    dirs = [
-        '/media/storage2/uct_data/cent/centipede_dummy.tar.gz',
-        '/media/storage2/uct_data/cent/centipede_rnn_cut.tar.gz',
-        '/media/storage2/uct_data/cent/centipede_hack.tar.gz',
-        '/media/storage2/uct_data/cent/centipede_deephack.tar.gz',
-        '/media/storage2/uct_data/cent/centipede_deephack2.tar.gz',
-        '/media/storage2/uct_data/cent/centipede_aws.tar.gz',
-        '/media/storage2/uct_data/cent/centipede_max.tar.gz',
-        '/media/storage2/uct_data/cent/centipede_max2.tar.gz',
-        '/media/storage2/uct_data/cent/centipede_lesha.tar.gz',
-        '/media/storage2/uct_data/cent/centipede_max3.tar.gz',
-        '/media/storage2/uct_data/cent/centipede_ivan.tar.gz',
-        '/media/storage2/uct_data/cent/centipede_ivan2.tar.gz',
-        '/media/storage2/uct_data/cent/centipede_max4.tar.gz',
-        '/media/storage2/uct_data/cent/centipede_sasha.tar.gz',
-    ]
-
     # create save dir, if already exist raise error
     if not os.path.exists(args.out_model):
         os.makedirs(args.out_model)
@@ -115,7 +74,7 @@ def run_training():
     save_callback = ModelCheckpoint(save_path, period=args.save_period)
 
     load_runs_fn = lambda x: load_runs(x, args.height, args.width, args.downsample, args.min_run_score)
-    runs = load_runs_fn([dirs[0]])
+    runs = load_runs_fn([args.dirs[0]])
 
     # get info from runs
     num_actions = len(runs[0]['action_visits'][0])
@@ -163,7 +122,7 @@ def run_training():
     try:
         model.fit_generator(
             generator=batch_generator(
-                (load_runs_fn, dirs), num_actions, args.loss, args.augment, args.n_frames,
+                (load_runs_fn, args.dirs), num_actions, args.loss, args.augment, args.n_frames,
                 flip_map, not args.color, args.weight_runs, args.batch
             ),
             samples_per_epoch=(args.samples_per_epoch/args.batch)*args.batch,

@@ -8,7 +8,7 @@ To run just uct search use:
   
     $ python run_uct.py
 
-To run uct search and collect data for further search run:
+To run uct search and collect data for further training run:
 
     $ python collect_uct_data.py
  
@@ -16,6 +16,6 @@ To run uct search and collect data for further search run:
 
 To run supervised training with collected data use:
 
-    $ python train_keras.py
+    $ python train_keras.py dirs_with_uct_data
 
-use flag --help to see all options UCT and supervised learning scripts.
+Use flag --help to see all options for UCT and supervised learning scripts.
