@@ -1,0 +1,7 @@
+ale-python-interface==0.0.1
+Theano==0.9.0.dev5
+gym==0.7.0
+cv2==1.0
+numpy==1.12.0
+Keras==1.2.0
+Lasagne==0.2.dev1

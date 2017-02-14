@@ -8,7 +8,7 @@ To run just uct search use:
   
     $ python run_uct.py
 
-To run uct search and collect data for further training run:
+To run uct search and collect data for further training use:
 
     $ python collect_uct_data.py
  
